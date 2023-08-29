@@ -139,7 +139,7 @@ fun SettingsScreen(navController: NavHostController) {
                     },
                 ),
                 modifier = Modifier.shadow(appBarElevation),
-                title = { Text(text = "Settings") },
+                title = { Text(text = "Configurações") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate("home") }) {
                         Icon(

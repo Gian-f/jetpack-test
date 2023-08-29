@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.br.jetpacktest.ui.screens.HomeScreen
 import com.br.jetpacktest.ui.screens.LoginScreen
 import com.br.jetpacktest.ui.screens.NotificationsScreen
+import com.br.jetpacktest.ui.screens.OrdersScreen
 import com.br.jetpacktest.ui.screens.SettingsScreen
 
 
@@ -28,6 +29,9 @@ fun Navigation() {
         }
         composable(Screen.Notifications.route) {
             NotificationsScreen(navController)
+        }
+        composable(Screen.Orders.route) {
+            OrdersScreen(navController)
         }
     }
 }

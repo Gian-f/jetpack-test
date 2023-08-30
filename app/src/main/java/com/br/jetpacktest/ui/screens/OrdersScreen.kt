@@ -3,6 +3,7 @@ package com.br.jetpacktest.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,9 +11,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIos
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardDefaults.elevatedShape
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +30,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.br.jetpacktest.data.dummy.OrderData
@@ -39,8 +42,8 @@ import java.util.Locale
 @Composable
 fun OrdersScreen(navController: NavController) {
     val items = OrderData.items
-    val chipStateInProgress = remember { mutableStateOf(false) }
-    val chipStateDelivered = remember { mutableStateOf(true) }
+    val chipStateInProgress = remember { mutableStateOf(true) }
+    val chipStateDelivered = remember { mutableStateOf(false) }
     val chipStateCancelled = remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -64,14 +67,15 @@ fun OrdersScreen(navController: NavController) {
         content = { innerPadding ->
             Column {
                 Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxWidth()
                 ) {
+                    Spacer(modifier = Modifier.width(4.dp))
                     ElevatedFilterChip(
-                        label = "Em andamento",
+                        label = "Pendentes",
                         selected = chipStateInProgress,
                         onSelected = {
                             chipStateInProgress.value = true
@@ -89,7 +93,7 @@ fun OrdersScreen(navController: NavController) {
                         }
                     )
                     ElevatedFilterChip(
-                        label = "Canceladas",
+                        label = "Cancelados",
                         selected = chipStateCancelled,
                         onSelected = {
                             chipStateInProgress.value = false
@@ -97,6 +101,7 @@ fun OrdersScreen(navController: NavController) {
                             chipStateCancelled.value = true
                         }
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                 }
                 LazyColumn {
                     item {
@@ -106,13 +111,12 @@ fun OrdersScreen(navController: NavController) {
                                     (chipStateCancelled.value && item.status == "Cancelado")
                         }
                         filteredItems.forEach {
-                            Card(
+                            ElevatedCard(
                                 modifier = Modifier
                                     .padding(12.dp)
                                     .fillMaxWidth()
                                     .height(170.dp),
-                                elevation = CardDefaults.cardElevation(5.dp),
-                                colors = CardDefaults.cardColors(Color(0xFFF9F9F9))
+                                shape = elevatedShape
                             ) {
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -153,13 +157,19 @@ fun OrdersScreen(navController: NavController) {
                                     )
                                 }
                                 Row(
-                                    horizontalArrangement = Arrangement.End,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(top = 16.dp)
                                 ) {
                                     Text(
-                                        text = "Subtotal: $" + it.total,
+                                        text = "Subtotal: ",
+                                        fontFamily = FontFamily.SansSerif,
+                                        modifier = Modifier.padding(start = 12.dp)
+                                    )
+
+                                    Text(
+                                        text = it.total,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = FontFamily.SansSerif,
                                         modifier = Modifier.padding(end = 12.dp)
@@ -175,7 +185,8 @@ fun OrdersScreen(navController: NavController) {
                                     Text(
                                         text = it.status.uppercase(Locale.ROOT),
                                         fontFamily = FontFamily.SansSerif,
-                                        modifier = Modifier.padding(start = 12.dp),
+                                        fontSize = TextUnit(14F, TextUnitType.Sp),
+                                        modifier = Modifier.padding(start = 12.dp, top = 8.dp),
                                         color =
                                         if (it.status.contains("Pendente")) Color(0xFFCF6212)
                                         else if (it.status.contains("Cancelado")) Color(0xFFC50000)

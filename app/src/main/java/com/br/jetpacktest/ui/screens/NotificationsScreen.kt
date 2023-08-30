@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.br.jetpacktest.data.dummy.NotificationsData
 import com.br.jetpacktest.util.formatDateAgo
 import java.util.Date
 
@@ -55,23 +56,25 @@ fun NotificationsScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val list = (0..20).map { it.toString() }
+                val list = NotificationsData.items
                 items(count = list.size) { index ->
 
                     Column(modifier = Modifier.padding(start = 16.dp, top = 12.dp, end = 16.dp)) {
                         Text(
                             text = "Oferta imperdível $index",
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleLarge
                         )
+                        Spacer(modifier = Modifier.height(4.dp))
+
                         Text(
                             text = "Olha só o que você está perdendo..."
                         )
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
                             text = formattedDateAgo,
-                            fontSize = TextUnit(14F, TextUnitType.Sp),
+                            style = MaterialTheme.typography.titleSmall,
                             color = Color.Gray,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )

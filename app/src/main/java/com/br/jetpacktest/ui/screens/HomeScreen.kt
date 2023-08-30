@@ -21,34 +21,15 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBalance
-import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.ContactSupport
-import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.LocalOffer
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingBag
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.outlined.AccountBalance
-import androidx.compose.material.icons.outlined.Business
-import androidx.compose.material.icons.outlined.ContactSupport
-import androidx.compose.material.icons.outlined.CreditCard
-import androidx.compose.material.icons.outlined.Help
-import androidx.compose.material.icons.outlined.LocalOffer
-import androidx.compose.material.icons.outlined.Newspaper
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.ShoppingBag
-import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -87,7 +68,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.br.jetpacktest.data.dummy.NavigationDrawerData
-import com.br.jetpacktest.domain.model.NavigationDrawerItemData
+import com.br.jetpacktest.data.dummy.NotificationsData
 import com.br.jetpacktest.ui.components.ConfirmDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -114,7 +95,7 @@ private fun HomeContent(
 
     ModalNavigationDrawer(
         drawerContent = {
-            ModalDrawerSheet(modifier = Modifier.width(350.dp)) {
+            ModalDrawerSheet(modifier = Modifier.width(300.dp)) {
                 LazyColumn {
                     item {
                         DrawerHeader(openDialog)
@@ -191,7 +172,7 @@ private fun DrawerHeader(openDialog: MutableState<Boolean>) {
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = "Gian Felipe da Silva",
+                    text = "Gian Felipe",
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(start = 16.dp),
                     style = MaterialTheme.typography.titleLarge,
@@ -207,17 +188,18 @@ private fun DrawerHeader(openDialog: MutableState<Boolean>) {
                     fontWeight = FontWeight.W400,
                     color = Color.Gray
                 )
-
-                Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                    modifier = Modifier
-                        .align(Alignment.End),
-                    onClick = { openDialog.value = true }) {
-                    Icon(
-                        imageVector = Icons.Filled.Logout,
-                        tint = Color.DarkGray,
-                        contentDescription = "Logout"
-                    )
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface),
+                        onClick = { openDialog.value = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.Logout,
+                            tint = Color.Black,
+                            contentDescription = "Logout"
+                        )
+                    }
                 }
             }
         }
@@ -256,6 +238,13 @@ private fun PageContent(
                     }
                 },
                 actions = {
+                    BadgedBox(
+                        badge = {
+                            Badge { Text(NotificationsData.items.size.toString()) }
+                        })
+                    {
+
+                    }
                     IconButton(onClick = { navController.navigate("notifications") }) {
                         Icon(
                             imageVector = Icons.Default.NotificationsNone,

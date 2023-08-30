@@ -9,7 +9,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.br.jetpacktest.ui.routes.Navigation
+import com.br.jetpacktest.ui.screens.OrdersScreen
 import com.br.jetpacktest.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,6 +34,5 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Preview() {
     AppTheme {
-        Navigation()
     }
 }

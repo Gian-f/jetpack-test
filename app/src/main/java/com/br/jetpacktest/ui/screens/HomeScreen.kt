@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -85,6 +86,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.br.jetpacktest.data.dummy.NavigationDrawerData
 import com.br.jetpacktest.domain.model.NavigationDrawerItemData
 import com.br.jetpacktest.ui.components.ConfirmDialog
 import kotlinx.coroutines.CoroutineScope
@@ -103,64 +105,7 @@ fun HomeScreen(navController: NavHostController) {
 private fun HomeContent(
     navController: NavHostController,
 ) {
-    val items = listOf(
-        NavigationDrawerItemData(
-            title = "Produtos",
-            selectedIcon = Icons.Filled.ShoppingCart,
-            unselectedIcon = Icons.Outlined.ShoppingCart,
-        ),
-        NavigationDrawerItemData(
-            title = "Ofertas",
-            selectedIcon = Icons.Filled.LocalOffer,
-            unselectedIcon = Icons.Outlined.LocalOffer,
-        ),
-        NavigationDrawerItemData(
-            title = "Novidades",
-            selectedIcon = Icons.Filled.Newspaper,
-            unselectedIcon = Icons.Outlined.Newspaper,
-            badgeCount = 10
-        ),
-        NavigationDrawerItemData(
-            title = "Cliente",
-            selectedIcon = Icons.Filled.Person,
-            unselectedIcon = Icons.Outlined.Person,
-        ),
-        NavigationDrawerItemData(
-            title = "Pedidos",
-            selectedIcon = Icons.Filled.ShoppingBag,
-            unselectedIcon = Icons.Outlined.ShoppingBag,
-        ),
-        NavigationDrawerItemData(
-            title = "Títulos",
-            selectedIcon = Icons.Filled.AccountBalance,
-            unselectedIcon = Icons.Outlined.AccountBalance,
-        ),
-        NavigationDrawerItemData(
-            title = "Meus cartões",
-            selectedIcon = Icons.Filled.CreditCard,
-            unselectedIcon = Icons.Outlined.CreditCard,
-        ),
-        NavigationDrawerItemData(
-            title = "Quem somos",
-            selectedIcon = Icons.Filled.Business,
-            unselectedIcon = Icons.Outlined.Business,
-        ),
-        NavigationDrawerItemData(
-            title = "Contato",
-            selectedIcon = Icons.Filled.ContactSupport,
-            unselectedIcon = Icons.Outlined.ContactSupport,
-        ),
-        NavigationDrawerItemData(
-            title = "Tutorial",
-            selectedIcon = Icons.Filled.Help,
-            unselectedIcon = Icons.Outlined.Help,
-        ),
-        NavigationDrawerItemData(
-            title = "Configurações",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
-        ),
-    )
+    val items = NavigationDrawerData.items
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
@@ -169,7 +114,7 @@ private fun HomeContent(
 
     ModalNavigationDrawer(
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(modifier = Modifier.width(350.dp)) {
                 LazyColumn {
                     item {
                         DrawerHeader(openDialog)

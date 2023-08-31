@@ -1,8 +1,8 @@
 package com.br.jetpacktest.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,23 +23,22 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Checkroom
+import androidx.compose.material.icons.filled.ChildCare
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Man
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Link
-import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.icons.filled.Woman
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.DrawerState
@@ -48,23 +46,16 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -76,18 +67,24 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.br.jetpacktest.data.dummy.NavigationDrawerData
 import com.br.jetpacktest.data.dummy.NotificationsData.items
+import com.br.jetpacktest.ui.components.BottomSheetModalFilter
 import com.br.jetpacktest.ui.components.ConfirmDialog
+import com.br.jetpacktest.ui.components.FilterButton
+import com.br.jetpacktest.ui.components.HistoryItem
+import com.br.jetpacktest.ui.components.SegmentedButton
+import com.br.jetpacktest.ui.routes.Screen
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -96,18 +93,14 @@ fun HomeScreen(navController: NavHostController) {
     HomeContent(navController)
 }
 
-@OptIn(
-    ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun HomeContent(
-    navController: NavHostController,
-) {
+private fun HomeContent(navController: NavHostController) {
     val items = NavigationDrawerData.items
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState { 5 }
+    val pagerState = rememberPagerState { 2 }
     val openDialog = remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
@@ -122,11 +115,10 @@ private fun HomeContent(
                                 label = { Text(text = item.title) },
                                 selected = index == selectedItemIndex,
                                 onClick = {
-                                    if (item.title.contains("Configurações")) {
-                                        navController.navigate("Settings")
-                                    }
-                                    if (item.title.contains("Pedidos")) {
-                                        navController.navigate("Orders")
+                                    try {
+                                        navController.navigate(item.route)
+                                    } catch (e: Exception) {
+                                        Log.d("Navigation Exception", e.toString())
                                     }
                                     selectedItemIndex = index
                                     scope.launch {
@@ -150,6 +142,14 @@ private fun HomeContent(
                                 }
                             )
                         }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        SegmentedButton(
+                            items = listOf("Dia", "Noite"),
+                            onItemSelection = {
+
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
@@ -214,7 +214,7 @@ private fun DrawerHeader(openDialog: MutableState<Boolean>) {
                         onClick = { openDialog.value = true }) {
                         Icon(
                             imageVector = Icons.Filled.Logout,
-                            tint = Color.Black,
+                            tint = MaterialTheme.colorScheme.primary,
                             contentDescription = "Logout"
                         )
                     }
@@ -225,10 +225,7 @@ private fun DrawerHeader(openDialog: MutableState<Boolean>) {
 }
 
 @Composable
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 private fun PageContent(
     scope: CoroutineScope,
     drawerState: DrawerState,
@@ -238,20 +235,18 @@ private fun PageContent(
     var isSearchBarVisible by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
-    val items = remember { mutableStateListOf("teste") }
-
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
-    val scope = rememberCoroutineScope()
-
-
+    val items = remember { mutableStateListOf(emptyList<String>()) }
+    val sheetState = rememberModalBottomSheetState(true)
     Scaffold(
         topBar = {
             Column {
                 CenterAlignedTopAppBar(
                     title = {
-                        Text("Produtos", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(
+                            Screen.Products.title,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
@@ -265,177 +260,143 @@ private fun PageContent(
                         TopAppBarActions(navController)
                     }
                 )
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    DockedSearchBar(
-                        modifier = Modifier
-                            .width(300.dp)
-                            .padding(start = 8.dp, end = 8.dp),
-                        query = query,
-                        onQueryChange = { query = it },
-                        onSearch = {
-                            items.add(query)
-                            active = false
-                            query = ""
-                        },
-                        active = active,
-                        onActiveChange = { active = it },
-                        placeholder = { Text(text = "Procure...") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Search"
-                            )
-                        },
-                        trailingIcon = {
-                            if (active) {
+                    Row {
+                        DockedSearchBar(
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f)
+                                .padding(8.dp),
+                            query = query,
+                            onQueryChange = { query = it },
+                            onSearch = {
+                                items.add(listOf(query))
+                                active = false
+                            },
+                            active = active,
+                            onActiveChange = { active = it },
+                            placeholder = { Text(text = "Procure...") },
+                            leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.Filled.Close,
-                                    contentDescription = "Search",
-                                    modifier = Modifier.clickable {
-                                        if (query.isNotEmpty()) {
-                                            query = ""
-                                        } else {
-                                            active = false
-                                            isSearchBarVisible = false
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Search"
+                                )
+                            },
+                            trailingIcon = {
+                                if (active) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Close,
+                                        contentDescription = "Search",
+                                        modifier = Modifier.clickable {
+                                            if (query.isNotEmpty()) {
+                                                query = ""
+                                            } else {
+                                                active = false
+                                                isSearchBarVisible = false
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                }
                             }
-                        },
-                    ) {
-                        items.forEach { itemName ->
-                            Row(modifier = Modifier.padding(14.dp)) {
-                                Icon(
-                                    modifier = Modifier.padding(end = 10.dp),
-                                    imageVector = Icons.Default.History,
-                                    contentDescription = "History"
-                                )
-                                Text(text = itemName)
+                        ) {
+                            items.forEach { itemName ->
+                                itemName.forEach { name ->
+                                    HistoryItem(name = name)
+                                }
                             }
                         }
-                    }
-                    OutlinedButton(
-                        onClick = {
-                            scope.launch { sheetState.show() }
-                        },
-                        modifier = Modifier.width(70.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.FilterList,
-                            tint = MaterialTheme.colorScheme.primary,
-                            contentDescription = "Filter list..."
+                        FilterButton(
+                            onClick = { scope.launch { sheetState.show() } },
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                                .width(70.dp)
                         )
                     }
                 }
             }
         },
-        content = { innerPadding ->
-            HorizontalPager(state = pagerState, contentPadding = innerPadding) {
-                // Conteúdo do pager
+        content = { contentPadding ->
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(contentPadding)
+            ) {
+                HorizontalPager(state = pagerState) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp, bottom = 16.dp)
+                    ) {
+                        CategoriesButton(
+                            label = "Mulheres",
+                            icon = Icons.Filled.Woman,
+                            onClick = {}
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        CategoriesButton(
+                            label = "Homens",
+                            icon = Icons.Filled.Man,
+                            onClick = {}
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+
+                        CategoriesButton(
+                            label = "Saúde",
+                            icon = Icons.Filled.Checkroom,
+                            onClick = {}
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+
+                        CategoriesButton(
+                            label = "Crianças",
+                            icon = Icons.Filled.ChildCare,
+                            onClick = {}
+                        )
+                    }
+                }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .padding(start = 16.dp, end = 16.dp),
+                    elevation = CardDefaults.cardElevation(2.dp),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+
+                }
             }
         }
     )
     if (sheetState.isVisible) {
-        ModalBottomSheetWithVerticalActions(sheetState, scope)
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ModalBottomSheetWithVerticalActions(state: SheetState, scope: CoroutineScope) {
-    // Define o estado das opções do filtro
-    var selectedOption by remember { mutableStateOf("Opção 1") }
-
-    LaunchedEffect(Unit) {
-        state.show()
-    }
-
-    if (state.isVisible) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                scope.launch {
-                    state.hide()
-                }
-            }) {
-            // Conteúdo do ModalBottomSheet
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                // Título do filtro
-                Text(
-                    text = "Filtre por",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                // Opções do filtro
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    RadioOption("Novos", selectedOption == "Opção 1") {
-                        selectedOption = "Opção 1"
-                        scope.launch {
-                            delay(500) // Atraso de 1 segundo
-                            state.hide() // Fecha o ModalBottomSheet
-                        }
-                    }
-                    RadioOption("Recomendados", selectedOption == "Opção 2") {
-                        selectedOption = "Opção 2"
-                        scope.launch {
-                            delay(300) // Atraso de 1 segundo
-                            state.hide() // Fecha o ModalBottomSheet
-                        }
-                    }
-                    RadioOption("Preço - do menor para o maior", selectedOption == "Opção 3") {
-                        selectedOption = "Opção 3"
-                        scope.launch {
-                            delay(200) // Atraso de 1 segundo
-                            state.hide() // Fecha o ModalBottomSheet
-                        }
-                    }
-                    RadioOption("Preço - do maior para o menor", selectedOption == "Opção 4") {
-                        selectedOption = "Opção 4"
-                        scope.launch {
-                            delay(200) // Atraso de 1 segundo
-                            state.hide() // Fecha o ModalBottomSheet
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
+        BottomSheetModalFilter(sheetState, scope)
     }
 }
 
 @Composable
-fun RadioOption(text: String, isSelected: Boolean, onSelect: () -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                onClick = onSelect
-            )
-            .padding(vertical = 8.dp)
+private fun CategoriesButton(
+    label: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Text(text = text, modifier = Modifier.weight(1f))
-        RadioButton(
-            selected = isSelected,
-            onClick = onSelect
+        Icon(
+            imageVector = icon,
+            contentDescription = "categories",
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(30.dp))
+                .padding(12.dp)
+                .clickable { onClick },
         )
+        Text(text = label, fontSize = TextUnit(12f, TextUnitType.Sp))
     }
 }
-
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -447,7 +408,7 @@ private fun TopAppBarActions(navController: NavHostController) {
             }
         }) {
     }
-    IconButton(onClick = { navController.navigate("notifications") }) {
+    IconButton(onClick = { navController.navigate(Screen.Notifications.route) }) {
         Icon(
             imageVector = Icons.Default.NotificationsNone,
             contentDescription = "Notifications"

@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.br.jetpacktest.data.dummy.OrderData
 import com.br.jetpacktest.ui.components.ElevatedFilterChip
+import com.br.jetpacktest.ui.routes.Screen
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,10 +50,14 @@ fun OrdersScreen(navController: NavController) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text("Meus Pedidos", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(
+                        Screen.Orders.title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("Home") }) {
+                    IconButton(onClick = { navController.navigate(Screen.Products.route) }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBackIos,
                             contentDescription = "Comeback"

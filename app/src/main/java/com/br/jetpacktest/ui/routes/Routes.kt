@@ -1,23 +1,20 @@
 package com.br.jetpacktest.ui.routes
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingBag
-import androidx.compose.ui.graphics.vector.ImageVector
-
-sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
-    object Home : Screen("home", "Home", Icons.Default.Home)
-    object Login : Screen("login", "Login", Icons.Default.Person)
-    object Settings: Screen("settings", "Settings", Icons.Default.Settings)
-    object Notifications: Screen("notifications", "Settings", Icons.Default.Notifications)
-    object Orders: Screen("orders", "Orders", Icons.Default.ShoppingBag)
-    object Favorites : Screen("favorites", "Favoritos", Icons.Default.Favorite)
-    object Profile : Screen("profile", "Perfil", Icons.Default.Face)
-    object Email : Screen("email", "Email", Icons.Default.Email)
+sealed class Screen(val route: String, val title: String) {
+    object Products : Screen("home", "Produtos")
+    object Offers : Screen("offers", "Ofertas")
+    object News : Screen("news", "Novidades")
+    object Client : Screen("client", "Cliente")
+    object Orders: Screen("orders", "Meus Pedidos")
+    object Titles: Screen("titles", "Títulos")
+    object MyCards: Screen("mycards", "Meus Cartões")
+    object Culture: Screen("culture", "Quem Somos")
+    object Contact: Screen("contact", "Contato")
+    object Tutorial: Screen("tutorial", "Tutorial")
+    object Settings: Screen("settings", "Configurações")
+    object Login : Screen("login", "Login")
+    object Notifications: Screen("notifications", "Notificações")
+    object Favorites : Screen("favorites", "Favoritos")
+    object Profile : Screen("profile", "Perfil")
+    object Email : Screen("email", "Email")
 }

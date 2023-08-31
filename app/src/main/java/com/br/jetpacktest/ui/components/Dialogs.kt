@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.br.jetpacktest.ui.routes.Screen
 
 @Composable
 fun ConfirmDialog(
@@ -33,7 +34,7 @@ fun ConfirmDialog(
             }, confirmButton = {
                 TextButton(onClick = {
                     dialogState.value = false
-                    navController.navigate("Login")
+                    navController.navigate(Screen.Login.route)
                 }) {
                     Text("Confirmar")
                 }

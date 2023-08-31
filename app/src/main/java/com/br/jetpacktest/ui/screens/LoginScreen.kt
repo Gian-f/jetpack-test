@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.br.jetpacktest.ui.components.CustomDivider
+import com.br.jetpacktest.ui.routes.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,7 +120,7 @@ fun LoginScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = { navController.navigate("home") },
+            onClick = { navController.navigate(Screen.Products.route) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(63.dp)
@@ -151,7 +152,7 @@ fun LoginScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = { navController.navigate("home") },
+            onClick = { navController.navigate(Screen.Products.route) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(63.dp)

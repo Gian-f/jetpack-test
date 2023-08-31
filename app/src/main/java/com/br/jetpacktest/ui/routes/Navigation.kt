@@ -21,7 +21,7 @@ fun Navigation() {
         composable(Screen.Login.route) {
             LoginScreen(navController)
         }
-        composable(Screen.Home.route) {
+        composable(Screen.Products.route) {
             HomeScreen(navController)
         }
         composable(Screen.Settings.route) {

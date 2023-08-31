@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.br.jetpacktest.ui.routes.Screen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -141,7 +142,7 @@ fun SettingsScreen(navController: NavHostController) {
                 modifier = Modifier.shadow(appBarElevation),
                 title = { Text(text = "Configurações") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("home") }) {
+                    IconButton(onClick = { navController.navigate(Screen.Products.route) }) {
                         Icon(
                             Icons.Rounded.ArrowBack,
                             contentDescription = "Go back"

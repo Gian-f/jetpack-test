@@ -22,11 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.br.jetpacktest.data.dummy.NotificationsData
+import com.br.jetpacktest.ui.routes.Screen
 import com.br.jetpacktest.util.formatDateAgo
 import java.util.Date
 
@@ -38,10 +37,10 @@ fun NotificationsScreen(navController: NavHostController) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text("Notificações", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(Screen.Notifications.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("home") }) {
+                    IconButton(onClick = { navController.navigate(Screen.Products.route) }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBackIosNew,
                             contentDescription = "Go back"

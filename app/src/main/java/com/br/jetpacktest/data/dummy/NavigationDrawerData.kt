@@ -16,7 +16,7 @@ import androidx.compose.material.icons.outlined.AccountBalance
 import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material.icons.outlined.ContactSupport
 import androidx.compose.material.icons.outlined.CreditCard
-import androidx.compose.material.icons.outlined.Help
+import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.LocalOffer
 import androidx.compose.material.icons.outlined.Newspaper
 import androidx.compose.material.icons.outlined.Person
@@ -76,7 +76,7 @@ object NavigationDrawerData {
         NavigationDrawerItemData(
             title = "Tutorial",
             selectedIcon = Icons.Filled.Help,
-            unselectedIcon = Icons.Outlined.Help,
+            unselectedIcon = Icons.Outlined.HelpOutline,
         ),
         NavigationDrawerItemData(
             title = "Configurações",

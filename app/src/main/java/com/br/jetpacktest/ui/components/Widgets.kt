@@ -45,10 +45,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -121,6 +125,7 @@ fun RadioOption(text: String, isSelected: Boolean, onSelect: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
+            .clip(CircleShape)
             .clickable(
                 onClick = onSelect
             )
@@ -355,5 +360,45 @@ fun SegmentedButton(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CategoriesButton(
+    label: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+) {
+    var isClicked by remember { mutableStateOf(false) }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Box(modifier = Modifier
+            .clip(CircleShape)
+            .clickable {
+                isClicked = !isClicked
+                onClick()
+            }
+            .padding(all = 10.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = "categories",
+                tint = if (isClicked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSecondary,
+                modifier = Modifier
+                    .background(
+                        MaterialTheme.colorScheme.inversePrimary,
+                        RoundedCornerShape(30.dp)
+                    )
+                    .padding(12.dp)
+            )
+        }
+        Text(
+            text = label,
+            fontWeight = FontWeight.W600,
+            fontSize = TextUnit(11f, TextUnitType.Sp)
+        )
     }
 }

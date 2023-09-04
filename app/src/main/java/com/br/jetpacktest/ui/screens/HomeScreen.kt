@@ -3,7 +3,6 @@ package com.br.jetpacktest.ui.screens
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,16 +23,13 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Checkroom
-import androidx.compose.material.icons.filled.ChildCare
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardVoice
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Man
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Woman
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -52,6 +49,9 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -67,8 +67,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -76,9 +76,12 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.br.jetpacktest.data.dummy.CategoriesDummyData.categories
 import com.br.jetpacktest.data.dummy.NavigationDrawerData
 import com.br.jetpacktest.data.dummy.NotificationsData.items
+import com.br.jetpacktest.data.dummy.ProductsData.products
 import com.br.jetpacktest.ui.components.BottomSheetModalFilter
+import com.br.jetpacktest.ui.components.CategoriesButton
 import com.br.jetpacktest.ui.components.ConfirmDialog
 import com.br.jetpacktest.ui.components.FilterButton
 import com.br.jetpacktest.ui.components.HistoryItem
@@ -86,7 +89,6 @@ import com.br.jetpacktest.ui.components.SegmentedButton
 import com.br.jetpacktest.ui.routes.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
@@ -225,7 +227,9 @@ private fun DrawerHeader(openDialog: MutableState<Boolean>) {
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+)
 private fun PageContent(
     scope: CoroutineScope,
     drawerState: DrawerState,
@@ -237,7 +241,10 @@ private fun PageContent(
     var active by remember { mutableStateOf(false) }
     val items = remember { mutableStateListOf(emptyList<String>()) }
     val sheetState = rememberModalBottomSheetState(true)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val productsPager = rememberPagerState { 5 }
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             Column {
                 CenterAlignedTopAppBar(
@@ -285,19 +292,31 @@ private fun PageContent(
                                 )
                             },
                             trailingIcon = {
-                                if (active) {
+                                Row {
                                     Icon(
-                                        imageVector = Icons.Filled.Close,
-                                        contentDescription = "Search",
-                                        modifier = Modifier.clickable {
-                                            if (query.isNotEmpty()) {
-                                                query = ""
-                                            } else {
-                                                active = false
-                                                isSearchBarVisible = false
-                                            }
-                                        }
+                                        imageVector = Icons.Filled.KeyboardVoice,
+                                        contentDescription = "Voice",
+                                        modifier = Modifier
+                                            .clip(CircleShape)
+                                            .clickable {}
                                     )
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    if (active) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = "Search",
+                                            modifier = Modifier
+                                                .clip(CircleShape)
+                                                .clickable {
+                                                    if (query.isNotEmpty()) {
+                                                        query = ""
+                                                    } else {
+                                                        active = false
+                                                        isSearchBarVisible = false
+                                                    }
+                                                }
+                                        )
+                                    }
                                 }
                             }
                         ) {
@@ -318,83 +337,103 @@ private fun PageContent(
             }
         },
         content = { contentPadding ->
-            Column(
+            LazyColumn(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(contentPadding)
             ) {
-                HorizontalPager(state = pagerState) {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
+                item {
+                    HorizontalPager(
+                        state = pagerState,
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp)
+                        ) {
+                            categories.forEach { categories ->
+                                CategoriesButton(
+                                    label = categories.label,
+                                    icon = categories.icon,
+                                    onClick = {
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(
+                                                message = categories.label,
+                                                actionLabel = null,
+                                                withDismissAction = true,
+                                                duration = SnackbarDuration.Short
+                                            )
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp, bottom = 16.dp)
+                            .height(180.dp)
+                            .padding(start = 22.dp, end = 22.dp),
+                        elevation = CardDefaults.cardElevation(3.dp),
+                        shape = RoundedCornerShape(10.dp)
                     ) {
-                        CategoriesButton(
-                            label = "Mulheres",
-                            icon = Icons.Filled.Woman,
-                            onClick = {}
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        CategoriesButton(
-                            label = "Homens",
-                            icon = Icons.Filled.Man,
-                            onClick = {}
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
 
-                        CategoriesButton(
-                            label = "Saúde",
-                            icon = Icons.Filled.Checkroom,
-                            onClick = {}
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Produtos Recomendados",
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = TextUnit(16F, TextUnitType.Sp)
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
-
-                        CategoriesButton(
-                            label = "Crianças",
-                            icon = Icons.Filled.ChildCare,
-                            onClick = {}
+                        Text(
+                            text = "Ver mais",
+                            fontWeight = FontWeight.W400,
+                            fontSize = TextUnit(13F, TextUnitType.Sp),
+                            color = Color(0xFF9B9B9B)
                         )
                     }
-                }
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .padding(start = 16.dp, end = 16.dp),
-                    elevation = CardDefaults.cardElevation(2.dp),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    ) {
+                        HorizontalPager(
+                            state = productsPager,
+                        ) {
+                            products.forEach {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Card(
+                                        modifier = Modifier
+                                            .width(120.dp)
+                                            .height(150.dp)
+                                    ) {
+//                                        Icon(
+//                                            modifier = Modifier.fillMaxSize(),
+//                                            imageVector = it.image,
+//                                            contentDescription = "icon"
+//                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                    Text(text = it.description)
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                    Text(text = it.price)
+                                }
+                                Spacer(modifier = Modifier.width(22.dp))
+                            }
+                        }
+                    }
                 }
             }
         }
     )
     if (sheetState.isVisible) {
         BottomSheetModalFilter(sheetState, scope)
-    }
-}
-
-@Composable
-private fun CategoriesButton(
-    label: String,
-    icon: ImageVector,
-    onClick: () -> Unit,
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = "categories",
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(30.dp))
-                .padding(12.dp)
-                .clickable { onClick },
-        )
-        Text(text = label, fontSize = TextUnit(12f, TextUnitType.Sp))
     }
 }
 

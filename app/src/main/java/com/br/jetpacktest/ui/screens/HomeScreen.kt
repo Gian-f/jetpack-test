@@ -110,7 +110,7 @@ private fun HomeContent(navController: NavHostController) {
             ModalDrawerSheet(modifier = Modifier.width(300.dp)) {
                 LazyColumn {
                     item {
-                        DrawerHeader(openDialog)
+                        DrawerHeader(openDialog, navController)
                         items.forEachIndexed { index, item ->
                             NavigationDrawerItem(
                                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
@@ -165,7 +165,7 @@ private fun HomeContent(navController: NavHostController) {
 }
 
 @Composable
-private fun DrawerHeader(openDialog: MutableState<Boolean>) {
+private fun DrawerHeader(openDialog: MutableState<Boolean>, navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -183,7 +183,9 @@ private fun DrawerHeader(openDialog: MutableState<Boolean>) {
                         CircleShape
                     )
                     .padding(12.dp)
-                    .size(70.dp, 70.dp),
+                    .size(70.dp, 70.dp)
+                    .clip(CircleShape)
+                    .clickable { navController.navigate(Screen.Profile.route) },
                 imageVector = Icons.Default.Person,
                 contentDescription = "Person",
             )
@@ -401,7 +403,9 @@ private fun PageContent(
                     }
                     Row(
                         horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
                     ) {
                         HorizontalPager(
                             state = productsPager,

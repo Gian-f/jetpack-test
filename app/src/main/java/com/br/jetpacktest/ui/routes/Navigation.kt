@@ -8,6 +8,7 @@ import com.br.jetpacktest.ui.screens.HomeScreen
 import com.br.jetpacktest.ui.screens.LoginScreen
 import com.br.jetpacktest.ui.screens.NotificationsScreen
 import com.br.jetpacktest.ui.screens.OrdersScreen
+import com.br.jetpacktest.ui.screens.ProfileScreen
 import com.br.jetpacktest.ui.screens.SettingsScreen
 
 
@@ -32,6 +33,9 @@ fun Navigation() {
         }
         composable(Screen.Orders.route) {
             OrdersScreen(navController)
+        }
+        composable(Screen.Profile.route) {
+            ProfileScreen(navController)
         }
     }
 }

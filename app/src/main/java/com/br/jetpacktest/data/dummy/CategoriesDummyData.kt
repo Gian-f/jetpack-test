@@ -6,28 +6,48 @@ import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.NoteAlt
-import com.br.jetpacktest.domain.model.CategoriesData
+import com.br.jetpacktest.domain.model.Categories
 
 object CategoriesDummyData {
     val categories = listOf(
-        CategoriesData(
+        Categories(
             label = "HomeCare",
             icon = Icons.Filled.Home
         ),
-        CategoriesData(
+        Categories(
             label = "Automotivo",
             icon = Icons.Filled.DirectionsCar
         ),
-        CategoriesData(
+        Categories(
             label = "Saúde",
             icon = Icons.Filled.MonitorHeart
         ),
-        CategoriesData(
+        Categories(
             label = "Crianças",
             icon = Icons.Filled.ChildFriendly
         ),
-        CategoriesData(
+        Categories(
             label = "Papelaria",
+            icon = Icons.Filled.NoteAlt
+        ),
+        Categories(
+            label = "Teste 1",
+            icon = Icons.Filled.Home
+        ),
+        Categories(
+            label = "Teste 2",
+            icon = Icons.Filled.DirectionsCar
+        ),
+        Categories(
+            label = "Teste 3",
+            icon = Icons.Filled.MonitorHeart
+        ),
+        Categories(
+            label = "Teste 4",
+            icon = Icons.Filled.ChildFriendly
+        ),
+        Categories(
+            label = "Teste 5",
             icon = Icons.Filled.NoteAlt
         ),
     )

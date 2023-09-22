@@ -8,32 +8,32 @@ import com.br.jetpacktest.util.FormatCurrency
 object ProductsData {
     val products = listOf(
         Products(
-            description = "Testando",
+            description = "Produto 1",
             image = Icons.Sharp.ImageNotSupported,
             price = FormatCurrency(10.00),
         ),
         Products(
-            description = "teste",
+            description = "Produto 2",
             image = Icons.Sharp.ImageNotSupported,
             price = FormatCurrency(80.00),
         ),
         Products(
-            description = "teste",
+            description = "Produto 3",
             image = Icons.Sharp.ImageNotSupported,
             price = FormatCurrency(120.00),
         ),
         Products(
-            description = "teste",
+            description = "Produto 4",
             image = Icons.Sharp.ImageNotSupported,
             price = FormatCurrency(15.00),
         ),
         Products(
-            description = "teste",
+            description = "Produto 5",
             image = Icons.Sharp.ImageNotSupported,
             price = FormatCurrency(100.00),
         ),
         Products(
-            description = "teste",
+            description = "Produto 6",
             image = Icons.Sharp.ImageNotSupported,
             price = FormatCurrency(200.00),
         )

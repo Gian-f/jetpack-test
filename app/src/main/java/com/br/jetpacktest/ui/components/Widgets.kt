@@ -381,7 +381,7 @@ fun CategoriesButton(
                 isClicked = !isClicked
                 onClick()
             }
-            .padding(all = 10.dp)
+            .padding(all = 11.dp)
         ) {
             Icon(
                 imageVector = icon,

@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -100,17 +99,19 @@ import com.br.jetpacktest.ui.components.HistoryItem
 import com.br.jetpacktest.ui.components.PagerIndicator
 import com.br.jetpacktest.ui.components.SegmentedButton
 import com.br.jetpacktest.ui.routes.Screen
+import com.br.jetpacktest.ui.viewmodel.ThemeViewModel
+import com.br.jetpacktest.util.ComposeTheme
 import com.br.jetpacktest.util.VoiceToTextParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
-    HomeContent(navController)
+fun HomeScreen(navController: NavHostController, themeViewModel: ThemeViewModel) {
+    HomeContent(navController, themeViewModel)
 }
 
 @Composable
-private fun HomeContent(navController: NavHostController) {
+private fun HomeContent(navController: NavHostController, themeViewModel: ThemeViewModel) {
     val items = NavigationDrawerData.items
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -156,14 +157,18 @@ private fun HomeContent(navController: NavHostController) {
                                 })
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-                        SegmentedButton(items = listOf("Dia", "Noite"), onItemSelection = {
-
-                        })
+                        SegmentedButton(
+                            items = listOf("Dia", "Noite"),
+                            onItemSelection = { selectedItemIndex ->
+                                themeViewModel.setTheme(if (selectedItemIndex == 0) ComposeTheme.Light else ComposeTheme.Dark)
+                            })
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
-        }, gesturesEnabled = true, drawerState = drawerState
+        },
+        gesturesEnabled = true,
+        drawerState = drawerState
     ) {
         PageContent(scope, drawerState, navController)
         ConfirmDialog(
@@ -186,15 +191,16 @@ private fun DrawerHeader(openDialog: MutableState<Boolean>) {
         Row(
             verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Center
         ) {
-            Image(
+            Icon(
+                imageVector = Icons.Default.Person,
                 modifier = Modifier
                     .border(
                         1.dp, Color.LightGray, CircleShape
                     )
                     .padding(12.dp)
                     .size(70.dp, 70.dp),
-                imageVector = Icons.Default.Person,
                 contentDescription = "Person",
+                tint = MaterialTheme.colorScheme.secondary
             )
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -214,7 +220,6 @@ private fun DrawerHeader(openDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(start = 16.dp),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.W400,
-                    color = Color.Gray
                 )
                 Row(
                     horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()

@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastDistinctBy
+import androidx.compose.ui.util.fastForEach
 import androidx.navigation.NavHostController
 import com.br.jetpacktest.data.dummy.NotificationsData
 import com.br.jetpacktest.ui.components.ConfirmDialog
@@ -57,6 +59,7 @@ fun NotificationsScreen(navController: NavHostController) {
                 },
                 actions = {
                     if (notifications.isNotEmpty()) {
+                        notifications.fastDistinctBy {  }
                         IconButton(
                             onClick = {
                                 openDialog.value = true

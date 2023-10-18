@@ -116,6 +116,7 @@ fun OrdersScreen(navController: NavController) {
                                     (chipStateCancelled.value && item.status == "Cancelado")
                         }
                         filteredItems.forEach {
+                            filteredItems.stream().forEachOrdered {  }
                             ElevatedCard(
                                 modifier = Modifier
                                     .padding(12.dp)

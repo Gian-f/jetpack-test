@@ -7,23 +7,30 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.br.jetpacktest.ui.screens.CardsScreen
 import com.br.jetpacktest.ui.screens.HomeScreen
-import com.br.jetpacktest.ui.screens.LoginScreen
 import com.br.jetpacktest.ui.screens.NotificationsScreen
 import com.br.jetpacktest.ui.screens.OrdersScreen
 import com.br.jetpacktest.ui.screens.ProfileScreen
 import com.br.jetpacktest.ui.screens.SettingsScreen
+import com.br.jetpacktest.ui.screens.auth.LoginScreen
+import com.br.jetpacktest.ui.screens.auth.SignUpScreen
+import com.br.jetpacktest.ui.screens.auth.SignUpViewModel
+import com.br.jetpacktest.ui.viewmodel.AuthViewModel
 import com.br.jetpacktest.ui.viewmodel.ThemeViewModel
 
 
 @Composable
-fun Navigation(themeViewModel: ThemeViewModel = viewModel()) {
+fun Navigation(
+    themeViewModel: ThemeViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel(),
+    signUpViewModel: SignUpViewModel = viewModel(),
+) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = Screen.Login.route
     ) {
         composable(Screen.Login.route) {
-            LoginScreen(navController)
+            LoginScreen(authViewModel, navController)
         }
         composable(Screen.Products.route) {
             HomeScreen(navController, themeViewModel)
@@ -42,6 +49,9 @@ fun Navigation(themeViewModel: ThemeViewModel = viewModel()) {
         }
         composable(Screen.MyCards.route) {
             CardsScreen(navController)
+        }
+        composable(Screen.SignUp.route) {
+            SignUpScreen(signUpViewModel, navController)
         }
     }
 }
